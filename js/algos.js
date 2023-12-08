@@ -6,22 +6,40 @@ Number.prototype.toRadians = function() {
 
 // Calculates the distance between Grenoble and the given city
 function distanceFromGrenoble(city)
-{
+{ console.log(city)
+
   console.log("distanceFromGrenoble - implement me !");
   var GrenobleLat = 45.166667;
   var GrenobleLong = 5.716667;
+  const R = 6371e3; // metres
+  const φ1 = GrenobleLat * Math.PI/180; // φ, λ in radians
+  const φ2 = (city.latitude) * Math.PI/180;
+  const Δφ = ((city.latitude)-GrenobleLat) * Math.PI/180;
+  const Δλ = ((city.longitude)-GrenobleLong) * Math.PI/180;
 
-  return 1;
+  const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ/2) * Math.sin(Δλ/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+  const d = R * c; // in metres
+  return d
 }
-
+const counter = {
+  nb_comparaison : 0,
+  nb_swap : 0
+}
 // Swap 2 values in array csvData
 // i is the index of the first city
 // j is the index of the second city
 function swap(i,j)
 {
+  tmp=csvData[i]
+  csvData[i]=csvData[j]
+  csvData[j]=tmp
   displayBuffer.push(['swap', i, j]); // Do not delete this line (for display)
   console.log("swap - implement me !");
-
+  counter.nb_swap++
 }
 
 // Returns true if city with index i in csvData is closer to Grenoble than city with index j
@@ -29,28 +47,88 @@ function swap(i,j)
 // j is the index of the second city
 function isLess(i, j)
 {
+  
   displayBuffer.push(['compare', i, j]); // Do not delete this line (for display)
   console.log("isLess - implement me !");
+  counter.nb_comparaison++
+  return distanceFromGrenoble(csvData[i])<distanceFromGrenoble(csvData[j])
 }
 
 
 function insertsort()
-{
+{   
+  let n = csvData.length
+  for (i=1;i<n;i++){
+      tmp=csvData[i]
+      j=i
+      while(j>0 && isLess(j, j-1)){
+          swap(j,j-1)
+          j=j-1
+      }
+      csvData[j]=tmp
+  }
+
   console.log("insertsort - implement me !");
 }
 
 function selectionsort()
-{
+{ 
+
+  for ( i = 0;i < csvData.length; i++){
+    
+    j = i+1
+    while (j < csvData.length){
+        if (isLess(j,i)) {
+            swap(i,j)
+            
+        }
+        j++
+    }
+}
+
   console.log("selectionsort - implement me !");
 }
 
 function bubblesort()
-{
+{ 
+let m = csvData.length
+for(i=1;i<m-1;i++){
+    for(j=0;j<m-i;j++){
+        
+        if(isLess(j+1,j)){
+           swap(j,j+1)
+           
+        }
+    }
+} 
+
   console.log("bubblesort - implement me !");
 }
 
 function shellsort()
-{
+{ 
+  
+  console.log("tri de shell")
+  let len = csvData.length
+  let gap = Math.floor(len/2)
+  while(gap>0){
+      //je commence au gap et je verifie que le j ne sorte pas du tableau
+      for (j=gap;j<len;j++){
+          //je mets les deux indices au meme niveau
+          let tmp=csvData[j]
+          let i = j
+          //je stock la valeur de j dans une variable temporaire
+          
+          while (i>=gap && isLess(i,i-gap)){
+              swap(i,i-gap)
+              
+              i=i-gap
+          }
+          csvData[i] = tmp;
+      }
+      gap=Math.floor(gap/2)
+  }
+  
   console.log("shellsort - implement me !");
 }
 
@@ -76,6 +154,7 @@ function quick3sort()
 
 function sort(algo)
 {
+  console.log(csvData[0])
   switch (algo)
   {
     case 'insert': insertsort();break;
@@ -88,4 +167,7 @@ function sort(algo)
     case 'quick3': quick3sort();break;
     default: throw 'Invalid algorithm ' + algo;
   }
+  console.log(counter)
+  counter.nb_comparaison=0
+  counter.nb_swap=0
 }
