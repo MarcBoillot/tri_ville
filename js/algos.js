@@ -94,10 +94,8 @@ function bubblesort()
 let m = csvData.length
 for(i=1;i<m-1;i++){
     for(j=0;j<m-i;j++){
-        
         if(isLess(j+1,j)){
            swap(j,j+1)
-           
         }
     }
 } 
@@ -142,8 +140,27 @@ function heapsort()
   console.log("heapsort - implement me !");
 }
 
-function quicksort()
+function quicksort(min=0, max= csvData.length)
 {
+  if (min<max){
+    //je met le pivot sur la premiere valeur
+    let pivot=min
+    for(let index=min+1;index<max;index++){
+        if(isLess(index,pivot)){
+          //je swap pour mettre la plus petite valeur au niveau du pivot
+          swap(index,pivot)
+          //j'avance le pivot pour que la petite valeur se retrouve a sa gauche
+          pivot++
+          //apres avoir incrementé le pivot de 1 je swap pour qu'il reprenne sa valeur initiale
+          swap(index,pivot)
+        }
+    }
+//j'utilise la recursivite pour la partie gauche du pivot
+quicksort(min,pivot)
+//j'utilise la recursivité pour la partie droite du pivot
+quicksort(pivot+1,max)
+}
+
   console.log("quicksort - implement me !");
 }
 function quick3sort()
