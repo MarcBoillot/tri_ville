@@ -88,11 +88,12 @@ function selectionsort()
 
   console.log("selectionsort - implement me !");
 }
-
+//je fais remonter le plus grand comme une bulle
 function bubblesort()
 { 
 let m = csvData.length
 for(i=1;i<m-1;i++){
+  //boucle pour qu'il s'arrete au tableau désordonné
     for(j=0;j<m-i;j++){
         if(isLess(j+1,j)){
            swap(j,j+1)
